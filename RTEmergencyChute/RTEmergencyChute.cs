@@ -50,9 +50,7 @@ namespace RTEmergencyChute
             // Call every defined interval
             if ((Time.time - lastUpdate) > updateInterval)
             {
-
-                lastUpdate = Time.time;
-                debugLog.Add("OnUpdate");
+                //debugLog.Add("OnUpdate");
 
                 /* 
                     Get ModuleParachute values
@@ -68,7 +66,7 @@ namespace RTEmergencyChute
                 if (vessel.situation == Vessel.Situations.FLYING && this.isEnabled)
                 {
                     // Check if we have lost RT connection (and that parachute has not been staged)
-                    if (RtAPI.HasAnyConnection(vessel.id) == false && this.part.State == PartStates.IDLE)
+                    if ((RtAPI.HasConnectionToKSC(vessel.id) == false && !RtAPI.HasLocalControl(vessel.id)) && this.part.State == PartStates.IDLE)
                     {
                         debugLog.Add("RTEmergencyChute: No connection..");
                         //debugLog.Add("RTEmergencyChute: Vessel verticalSpeed: " + this.vessel.verticalSpeed.ToString());
@@ -100,6 +98,7 @@ namespace RTEmergencyChute
                     }
                 }
 
+                lastUpdate = Time.time;
                 // Output any debug messages
                 foreach (string logLine in debugLog)
                 {
